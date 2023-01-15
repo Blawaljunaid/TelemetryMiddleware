@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FingridMon.Service", "Fingr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fingrid.Monitoring", "Fingrid.Monitoring\Fingrid.Monitoring.csproj", "{9A5CC60E-7E93-4A09-899C-F7741F69A402}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FingridMon.Settings", "FingridMon.Settings\FingridMon.Settings.csproj", "{826C8AF3-CF3C-4D93-84F9-BDAD6E9A7794}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FingridMon.Settings", "FingridMon.Settings\FingridMon.Settings.csproj", "{826C8AF3-CF3C-4D93-84F9-BDAD6E9A7794}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AB054040-4FCD-4533-91EA-DB7060286057}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

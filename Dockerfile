@@ -5,7 +5,7 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["FingridMon.Service/FingridMon.Service.csproj", "FingridMon.Service/"]
+COPY FingridMon.Service/FingridMon.Service.csproj FingridMon.Service/
 RUN dotnet restore "FingridMon.Service/FingridMon.Service.csproj"
 COPY . .
 WORKDIR "/src/FingridMon.Service"
