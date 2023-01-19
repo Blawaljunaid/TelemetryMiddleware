@@ -1,0 +1,14 @@
+00, Billing
+01, Branchless Banking
+02, Cards
+03, Inward Remittance
+04, Correspondent Banking
+05, Self Service
+06, Remita Inward Remittance
+07, 3Line Cards 
+08, USSD Mobile Banking
+09, Credit Club
+10, Agent Banking
+11, Payments and Transfers
+12, Nibbs Outward Transfer
+13, Pin Selection
