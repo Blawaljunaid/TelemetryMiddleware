@@ -17,4 +17,5 @@ RUN dotnet publish "FingridMon.Service.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+#Entry
 ENTRYPOINT ["dotnet", "FingridMon.Service.dll"]
