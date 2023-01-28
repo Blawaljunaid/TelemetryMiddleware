@@ -34,8 +34,8 @@ namespace Fingrid.Monitoring
             : base(loader, "SwitchTransactions", channelName)
         {
             this.objDict = new ConcurrentDictionary<string, SampleSwitchObj>();
-            this.tableName = "Trx1Gabetest";
-            this.tableName2 = "Trx3Gabetest";
+            this.tableName = "Trx1";
+            this.tableName2 = "Trx3";
             technicalSuccessItems = new Dictionary<string, string>();
 
 
@@ -210,7 +210,7 @@ namespace Fingrid.Monitoring
             if (!String.IsNullOrEmpty(requestOrResponseString))
             {
 
-                var requestOrResponsePoint = GenerateRequestOrResponsePoint(obj, requestOrResponseString, "ReversalTrx2Gabetest", originatedFrom);
+                var requestOrResponsePoint = GenerateRequestOrResponsePoint(obj, requestOrResponseString, "ReversalTrx2", originatedFrom);
                 Logger.Log("From ProcessReversals method, We want to write this to influx: " + Newtonsoft.Json.JsonConvert.SerializeObject(requestOrResponsePoint));
 
                 try
@@ -282,7 +282,7 @@ namespace Fingrid.Monitoring
 
             if (!String.IsNullOrEmpty(requestOrResponseString))
             {
-                var requestOrResponsePoint = GenerateRequestOrResponsePoint(obj, requestOrResponseString, "Trx2Gabetest", "");
+                var requestOrResponsePoint = GenerateRequestOrResponsePoint(obj, requestOrResponseString, "Trx2", "");
 
                 try
                 {

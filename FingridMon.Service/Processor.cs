@@ -48,69 +48,73 @@ namespace FingridMon.Service
                        System.Threading.ThreadPool.SetMinThreads(2, 10); // newly added
 
                        processors.Add(new Fingrid.Monitoring.GoGridCentralSwitchProcessor(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.CoreBankingSwitchProcessor(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.UssdProcessor(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.CbaProcessor(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.EODCoordinatorProcessor(loader));
-                       //processors.Add(new Fingrid.Monitoring.CreditClubUptime(loader));
-                       //processors.Add(new Fingrid.Monitoring.BankOneMobileUptime(loader));
-                       //processors.Add(new Fingrid.Monitoring.BankoneMessagingProcessor(loader));
-                       //processors.Add(new Fingrid.Monitoring.ExternalThirdParty(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.BankOneAgent(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.BankOneCacheDuration(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.MyBankOneRequestDuration(loader));
-                       //processors.Add(new Fingrid.Monitoring.NibbsInward(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.BankOneWebAPIMonitor(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.CreditClubMobileTracker(loader));
-                       //processors.Add(new Fingrid.Monitoring.BankOneMobileTracker(loader));
+                       processors.Add(new Fingrid.Monitoring.CoreBankingSwitchProcessor(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.UssdProcessor(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.CbaProcessor(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.EODCoordinatorProcessor(loader));
+                       processors.Add(new Fingrid.Monitoring.CreditClubUptime(loader));
+                       processors.Add(new Fingrid.Monitoring.BankOneMobileUptime(loader));
+                       processors.Add(new Fingrid.Monitoring.BankoneMessagingProcessor(loader));
+                       processors.Add(new Fingrid.Monitoring.ExternalThirdParty(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.BankOneAgent(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.BankOneCacheDuration(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.MyBankOneRequestDuration(loader));
+                       processors.Add(new Fingrid.Monitoring.NibbsInward(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.BankOneWebAPIMonitor(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.CreditClubMobileTracker(loader));
+                       processors.Add(new Fingrid.Monitoring.BankOneMobileTracker(loader));
 
-                       //processors.Add(new Fingrid.Monitoring.iPNXSwitchProcessor(loader, institutions)); // not in use
+                       processors.Add(new Fingrid.Monitoring.iPNXSwitchProcessor(loader, institutions)); // not in use
 
-                       //// processors.Add(new Fingrid.Monitoring.CbaIsoProcessor(loader, institutions)); // Crashing with index out of bound
-                       //// processors.Add(new Fingrid.Monitoring.CbaIsoProcessor2(loader, institutions));  // Crashing with index out of bound
+                       // processors.Add(new Fingrid.Monitoring.CbaIsoProcessor(loader, institutions)); // Crashing with index out of bound
+                       // processors.Add(new Fingrid.Monitoring.CbaIsoProcessor2(loader, institutions));  // Crashing with index out of bound
 
-                       //processors.Add(new Fingrid.Monitoring.BankOneAnniversaryNotificationProcessor(loader));
-                       //processors.Add(new Fingrid.Monitoring.BatchAccountStatementGeneration(loader));
-                       //processors.Add(new Fingrid.Monitoring.PreConfirmationProcessor(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.USSDSimulatorMonitoring(loader));
-                       //processors.Add(new Fingrid.Monitoring.InternetBankingProcessor(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.InternalThirdParty(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.CorrespondentBk_App(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.CorrespondentBk_Web(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.BankOneBranchlessBankingClientFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.BranchlessBankingServerFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.BankOneMobileClientFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.BankOneMobileServerFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.InternetBankingMobileClientFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.InternetBankingMobileServerFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.BankOneAnniversaryNotificationProcessor(loader));
+                       processors.Add(new Fingrid.Monitoring.BatchAccountStatementGeneration(loader));
+                       processors.Add(new Fingrid.Monitoring.PreConfirmationProcessor(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.USSDSimulatorMonitoring(loader));
+                       processors.Add(new Fingrid.Monitoring.InternetBankingProcessor(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.InternalThirdParty(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.CorrespondentBk_App(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.CorrespondentBk_Web(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.BankOneBranchlessBankingClientFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.BranchlessBankingServerFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.BankOneMobileClientFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.BankOneMobileServerFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.InternetBankingMobileClientFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.InternetBankingMobileServerFlow(loader, institutions));
 
-                       //////new guys
-                       //processors.Add(new Fingrid.Monitoring.NibssOutward(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.EODMonitor(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.EodMonitor2(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.IBBIBWebClientFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.IBBIBWebServerFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.IBVanillaWebClientFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.IBVanillaWebServerFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.InternetBankingBIBMobileClientTracker(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.ISWGatewayTransfers(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.InternetBankingBIBServerProcessFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.InternetBankingVanillaMobileClientTracker(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.InternetBankingVanillaServerProcessFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.BankOneMobileBranchlessBankingClientFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.BankOneMobileBranchlessBankingInAppFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.ProvidusWebClientFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.ProvidusWebServerFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.ProvidusMobileClientFlow(loader, institutions));
-                       //processors.Add(new Fingrid.Monitoring.CreditClubProcessor(loader));
-                       //processors.Add(new Fingrid.Monitoring.BankOneMobileProcessor(loader));
+                       ////new guys
+                       processors.Add(new Fingrid.Monitoring.NibssOutward(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.EODMonitor(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.EodMonitor2(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.IBBIBWebClientFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.IBBIBWebServerFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.IBVanillaWebClientFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.IBVanillaWebServerFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.InternetBankingBIBMobileClientTracker(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.ISWGatewayTransfers(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.InternetBankingBIBServerProcessFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.InternetBankingVanillaMobileClientTracker(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.InternetBankingVanillaServerProcessFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.BankOneMobileBranchlessBankingClientFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.BankOneMobileBranchlessBankingInAppFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.ProvidusWebClientFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.ProvidusWebServerFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.ProvidusMobileClientFlow(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.CreditClubProcessor(loader));
+                       processors.Add(new Fingrid.Monitoring.BankOneMobileProcessor(loader));
 
-                       //processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.AccountOpeningService(loader));
-                       //processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.OfflineDepositService(loader));
-                       //processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.CreditAssessmentLoanDisbursementService(loader));
-                       //processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.DBNFTReversalService(loader));
-                       //processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.PQAService(loader));
-                       //processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.SterlingInwardsTransferService(loader));
+                       processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.AccountOpeningService(loader));
+                       processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.OfflineDepositService(loader));
+                       processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.CreditAssessmentLoanDisbursementService(loader));
+                       processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.DBNFTReversalService(loader));
+                       processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.PQAService(loader));
+                       processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.SterlingInwardsTransferService(loader));
+
+                       //Latest guys
+                       processors.Add(new Fingrid.Monitoring.QoreBIBTransactionProcessor(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.BankoneWebApi(loader, institutions));
 
                        processors.ForEach(p => p.StartListening());
 
