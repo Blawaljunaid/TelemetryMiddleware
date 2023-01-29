@@ -1,4 +1,6 @@
 ﻿using Fingrid.Monitoring.Utility;
+using Fingrid.Monitoring;
+using Fingrid.Monitoring.Utility;
 using InfluxDB.Net;
 using InfluxDB.Net.Infrastructure.Influx;
 using InfluxDB.Net.Models;
@@ -80,9 +82,9 @@ namespace Fingrid.Monitoring
 
 
         }
-        
+
         ConcurrentDictionary<string, ThirdpartyObj> objDict = null;
-                
+
         protected override async void BreakMessageAndFlush(string message)
         {
 
@@ -143,7 +145,7 @@ namespace Fingrid.Monitoring
                 Logger.Log("DONE writing to influx");
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Log(ex.Message);
                 Logger.Log(ex.InnerException?.Message);
@@ -211,7 +213,7 @@ namespace Fingrid.Monitoring
         }
 
 
-        private string GetGroup(string institutionCode, Dictionary<string, string> integrationInstitutions, Dictionary<string,string> BankInTheBoxMFBs)
+        private string GetGroup(string institutionCode, Dictionary<string, string> integrationInstitutions, Dictionary<string, string> BankInTheBoxMFBs)
         {
             if (integrationInstitutions.ContainsKey(institutionCode))
             {
@@ -252,10 +254,7 @@ namespace Fingrid.Monitoring
             public string Status { get; set; }
             public string TransactionType { get; set; }
             public string TransactionResponseCode { get; set; }
-
-            
-
-    }
+        }
 
 
     }
