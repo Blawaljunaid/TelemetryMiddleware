@@ -93,7 +93,7 @@ namespace Fingrid.Monitoring
                 var pointToWrite = new Point()
                 {
                     Precision = InfluxDB.Net.Enums.TimeUnit.Milliseconds,
-                    Measurement = "TrxGabetest",
+                    Measurement = "Trx",
                     Tags = new Dictionary<string, object>()
                     {
                         {"InstitutionCode", GetGroup(currentObj.InstitutionCode)},

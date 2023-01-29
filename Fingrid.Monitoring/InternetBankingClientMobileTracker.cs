@@ -128,7 +128,7 @@ namespace Fingrid.Monitoring
                 var pointToWrite = new Point()
                 {
                     Precision = InfluxDB.Net.Enums.TimeUnit.Milliseconds,
-                    Measurement = "MobileClientTrxGabetest",
+                    Measurement = "MobileClientTrx",
                     Tags = new Dictionary<string, object>()
                                     {
                                         {"InstitutionCode", GetGroup(currentObj.InstitutionCode)},
@@ -354,7 +354,7 @@ namespace Fingrid.Monitoring
     //            var pointToWrite = new Point()
     //            {
     //                Precision = InfluxDB.Net.Enums.TimeUnit.Milliseconds,
-    //                Measurement = "MobileClientTrxGabetest",
+    //                Measurement = "MobileClientTrx",
     //                Tags = new Dictionary<string, object>()
     //                {
     //                    {"InstitutionCode", GetGroup(currentObj.InstitutionCode)},
