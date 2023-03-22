@@ -177,7 +177,6 @@ namespace Fingrid.Monitoring
                 Tags = new Dictionary<string, object>()
                 {
                     {"Environment", currentObj.Environment },
-                    {"InstitutionCode", currentObj.InstitutionCode },
                     {"TransactionType", currentObj.TransactionType },
                     {"ResponseCode", currentObj.ResponseCode },
                     {"InstitutionName", GetInstitutionName(currentObj.InstitutionCode) },
@@ -193,6 +192,7 @@ namespace Fingrid.Monitoring
                     { "ResponseTime", currentObj.Date.Subtract(initialObj.Date).TotalMilliseconds },
                     { "Amount", currentObj.Amount},
                     { "FraudAmountCnt", currentObj.Amount > FraudAmount ? 1:0 },
+                    {"InstitutionCode", currentObj.InstitutionCode },
                     { "Account1", currentObj.Account1},
                     { "Account2", currentObj.Account2},
                     { "PayeeName", currentObj.PayeeName},

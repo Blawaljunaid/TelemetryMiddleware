@@ -89,14 +89,12 @@ namespace Fingrid.Monitoring
                 {
                     { "CacheFunctionType", currentObj.CacheFunctionType},
                     {"InstitutionName", GetInstitutionName(currentObj.InstitutionCode) },
-                    { "institutionCode", currentObj.InstitutionCode },
                     { "IPAddress", currentObj.IPAddress},
                 },
                 Fields = new Dictionary<string, object>()
                 {
                     //{ "Time", DateTime.Parse(obj.TransactionTime).Subtract(DateTime.Parse (initialRequestObj.TransactionTime)).Milliseconds },
                     { "institutionCode", currentObj.InstitutionCode },
-                    {"InstitutionName", GetInstitutionName(currentObj.InstitutionCode) },
                     { "IPAddress", currentObj.IPAddress},
                     { "Duration", currentObj.Duration},
                     { "Interval", currentObj.Interval},

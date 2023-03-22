@@ -162,7 +162,6 @@ namespace Fingrid.Monitoring
                 Tags = new Dictionary<string, object>()
                 {
                     {"Environment" ,  this.environment },
-                    {"InstitutionCode", currentObj.InstitutionCode },
                     {"TransactionType", currentObj.TransactionType },
                     {"ResponseCode", currentObj.TransactionResponseCode },
                     {"TagStatus", currentObj.Status },
@@ -177,6 +176,7 @@ namespace Fingrid.Monitoring
                     //{ "Time", DateTime.Parse(obj.TransactionTime).Subtract(DateTime.Parse (initialRequestObj.TransactionTime)).Milliseconds },
                     { "ResponseTime", currentObj.Date.Subtract(initialObj.Date).TotalMilliseconds },
                     { "SuccessCount", currentObj.Status == "Successful" ? 1 : 0},
+                    {"InstitutionCode", currentObj.InstitutionCode },
                     { "PendingCount", currentObj.Status == "Pending" ? 1 : 0},
                     { "FailedCount", currentObj.Status == "Failed" ? 1 : 0},
                     {"UniqueId", currentObj.UniqueId },

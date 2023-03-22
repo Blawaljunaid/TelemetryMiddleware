@@ -94,7 +94,7 @@ namespace Fingrid.Monitoring
                 Measurement = "MobileServerProcessFlow",
                 Tags = new Dictionary<string, object>()
                                 {
-                                    {"InstitutionCode", GetGroup(currentObj.InstitutionCode)},
+                                    {"InstitutionGroup", GetGroup(currentObj.InstitutionCode)},
                                     {"InstitutionName", GetInstitutionName(currentObj.InstitutionCode) },
 
                                     { "ProcessName", currentObj.ProcessName},

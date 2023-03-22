@@ -131,7 +131,7 @@ namespace Fingrid.Monitoring
                     Measurement = "MobileClientTrx",
                     Tags = new Dictionary<string, object>()
                                     {
-                                        {"InstitutionCode", GetGroup(currentObj.InstitutionCode)},
+                                        {"InstitutionGroup", GetGroup(currentObj.InstitutionCode)},
                                         {"InstitutionName", GetInstitutionName(currentObj.InstitutionCode) },
                                         { "Response", response.Key },
                                         { "ProcessName", currentObj.ProcessName},

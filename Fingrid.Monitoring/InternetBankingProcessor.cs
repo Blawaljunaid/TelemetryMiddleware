@@ -223,7 +223,6 @@ namespace Fingrid.Monitoring
                 Tags = new Dictionary<string, object>()
                 {
                         //{ "Server", obj.Server },
-                    {"Institution", currentObj.InstitutionCode },
                     {"InstitutionName", GetInstitutionName(currentObj.InstitutionCode) },
                     {"SubTransactionType", currentObj.SubTransactionType },
                     {"TransactionType",  currentObj.TransactionType},
@@ -237,7 +236,8 @@ namespace Fingrid.Monitoring
                     //{ "Time", currentObj.TransactionTime.Subtract(initialObj.TransactionTime).TotalMilliseconds },
                     // { "Time2", currentObj.TransactionTime.Subtract(secondObj.TransactionTime).TotalMilliseconds },
                     //{ "SuccessCnt", IsSuccessful(currentObj) ? 1 : 0 },
-                    
+                    {"InstitutionCode", currentObj.InstitutionCode },
+
                     {"TotalCnt", 1},
                 },
                 Timestamp = DateTime.UtcNow // optional (can be set to any DateTime moment)
@@ -256,7 +256,6 @@ namespace Fingrid.Monitoring
                 Measurement = "Trx2", // serie/measurement/table to write into
                 Tags = new Dictionary<string, object>()
                 {
-                    {"Institution", currentObj.InstitutionCode },
                     {"InstitutionName", GetInstitutionName(currentObj.InstitutionCode) },
                     //{"RequestType", currentObj.Number == "1" ? 1  : 2},
                     {"Status", currentObj.Status },
@@ -275,6 +274,7 @@ namespace Fingrid.Monitoring
                 {
                     
                     //{ "Time", DateTime.Parse(obj.TransactionTime).Subtract(DateTime.Parse (initialRequestObj.TransactionTime)).Milliseconds },
+                    {"InstitutionCode", currentObj.InstitutionCode },
                     { "Duration", currentObj.DateTime.Subtract(initialObj.DateTime).TotalMilliseconds },
                     // { "Time2", currentObj.TransactionTime.Subtract(secondObj.TransactionTime).TotalMilliseconds },
                     { "SuccessCnt", IsSuccessful(currentObj.TransactionResponseCode) ? 1 : 0 },

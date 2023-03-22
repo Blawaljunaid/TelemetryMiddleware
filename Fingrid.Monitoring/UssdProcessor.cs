@@ -215,7 +215,6 @@ namespace Fingrid.Monitoring
                 Tags = new Dictionary<string, object>()
                 {
                         //{ "Server", obj.Server },
-                    {"Institution", currentObj.Institution },
                     {"InstitutionName", GetInstitutionName(currentObj.Institution) },
                     {"Network", currentObj.Network },
                     {"TransactionType",  currentObj.TransactionType},
@@ -228,6 +227,7 @@ namespace Fingrid.Monitoring
                     //{ "Time", currentObj.TransactionTime.Subtract(initialObj.TransactionTime).TotalMilliseconds },
                     // { "Time2", currentObj.TransactionTime.Subtract(secondObj.TransactionTime).TotalMilliseconds },
                     //{ "SuccessCnt", IsSuccessful(currentObj) ? 1 : 0 },
+                    {"Institution", currentObj.Institution },
                     {"PhoneNo" , currentObj.PhoneNo},
                     {"TotalCnt", 1},
                 },
@@ -247,7 +247,6 @@ namespace Fingrid.Monitoring
                 Measurement = "Trx2", // serie/measurement/table to write into
                 Tags = new Dictionary<string, object>()
                 {
-                    {"Institution", currentObj.Institution },
                     {"InstitutionName", GetInstitutionName(currentObj.Institution) },
                     //{"RequestType", currentObj.Number == "1" ? 1  : 2},
                     {"Network", currentObj.Network },
@@ -263,6 +262,7 @@ namespace Fingrid.Monitoring
 
                 Fields = new Dictionary<string, object>()
                 {
+                    {"Institution", currentObj.Institution },
                     {"PhoneNo" , currentObj.PhoneNo},
                     //{ "Time", DateTime.Parse(obj.TransactionTime).Subtract(DateTime.Parse (initialRequestObj.TransactionTime)).Milliseconds },
                     { "Duration", currentObj.TransactionTime.Subtract(initialObj.TransactionTime).TotalMilliseconds },
