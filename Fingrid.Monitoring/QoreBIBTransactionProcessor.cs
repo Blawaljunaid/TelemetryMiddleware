@@ -287,7 +287,7 @@ namespace Fingrid.Monitoring
                 Tags = new Dictionary<string, object>()
                 {
                     {"InstitutionCode", currentObj.InstitutionCode },
-                    {"InstitutionName", GetInstitutionName(currentObj.InstitutionCode) },
+                    {"InstitutionName",  InstitutionInfo.GetInstitutionName(currentObj.InstitutionCode,this.institutionsDict) },
                     {"InstitutionGroup" , GetGroup(currentObj.InstitutionCode, this.integrationFIs, this.BanKInTheBoxFIs) },
                     {"FailureCode", currentObj.FailureCode},
                     {"Environment", currentObj.Environment},

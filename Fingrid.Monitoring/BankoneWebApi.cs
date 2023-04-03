@@ -140,7 +140,7 @@ namespace Fingrid.Monitoring
                 {
 
                     {"InstitutionCode", currentObj.InstitutionCode },
-                    {"InstitutionName", GetInstitutionName(currentObj.InstitutionCode) },
+                    {"InstitutionName", InstitutionInfo.GetInstitutionName(currentObj.InstitutionCode, this.institutionsDict) },
                     {"InstitutionGroup" , GetGroup(currentObj.InstitutionCode, this.integrationFIs, this.BanKInTheBoxFIs) },
                     {"Method", currentObj.Method },
                     {"Status", currentObj.Status },

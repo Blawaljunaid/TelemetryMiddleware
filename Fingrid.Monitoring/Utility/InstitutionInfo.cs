@@ -85,5 +85,17 @@ namespace Fingrid.Monitoring.Utility
             catch { throw; }
         }
 
+        public static String GetInstitutionName(string institutionCode, Dictionary<string, Institution> institutionsDict)
+        {
+            Institution inst = null;
+            if (!institutionsDict.TryGetValue(institutionCode.Trim(), out inst))
+            {
+                inst = InstitutionInfo.GetInstitutionByCode(institutionCode);
+            }
+
+            if (inst == null) inst = new Institution { Name = institutionCode, Code = institutionCode };
+
+            return !String.IsNullOrEmpty(inst.Name) ? inst.Name : "Unknown Institution";
+        }
     }
 }

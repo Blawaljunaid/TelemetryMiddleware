@@ -251,7 +251,7 @@ namespace Fingrid.Monitoring
         //            {"Institution", currentObj.Institution },
         //            //{"Response", currentObj.PostingResponse },
         //            //{"Type", currentObj.PostingType },
-        //            {"InstitutionName", GetInstitutionName(currentObj.Institution) },
+        //            {"InstitutionName",  InstitutionInfo.GetInstitutionName(currentObj.Institution,this.institutionsDict) },
         //            {"InstitutionGroup" , GetGroup(currentObj.Institution) },
         //            {"TransactionType",  GetTransactionType(currentObj.PostingType)},
         //            //{"ErrorCode", currentObj.ErrorCode },
@@ -302,7 +302,7 @@ namespace Fingrid.Monitoring
                     {"TransactionType",  GetTransactionType(currentObj.PostingType)},
                     {"ErrorCode", currentObj.ErrorCode },
                     {"TechnicalSuccess", IsSuccessful(currentObj) ? "Successful" : "Failed" },
-                    {"InstitutionName", GetInstitutionName(currentObj.Institution) },
+                    {"InstitutionName",  InstitutionInfo.GetInstitutionName(currentObj.Institution,this.institutionsDict) },
                     {"PostingID", currentObj.PostingId },
 
 
@@ -345,7 +345,7 @@ namespace Fingrid.Monitoring
         //        {
         //            Precision = InfluxDB.Net.Enums.TimeUnit.Milliseconds,
         //            Measurement = "Trx90", //Trx90 is a test measurment, change in production!!
-        //            Tags = new Dictionary<string, object>()
+        //            Tags = new Dictionary<string, object>()GetInstitutionName(currentObj.Institution)
         //        {
 
         //               //{ "Server", obj.Server },
@@ -356,7 +356,7 @@ namespace Fingrid.Monitoring
         //            {"TransactionType",  GetTransactionType(currentObj.PostingType)},
         //            {"ErrorCode", currentObj.ErrorCode },
         //            {"TechnicalSuccess", IsSuccessful(currentObj) ? "Successful" : "Failed" },
-        //            {"InstitutionName", GetInstitutionName(currentObj.Institution) },
+        //            {"InstitutionName",  InstitutionInfo.GetInstitutionName(currentObj.Institution,this.institutionsDict) },
         //            {"PostingID", currentObj.PostingId },
 
 

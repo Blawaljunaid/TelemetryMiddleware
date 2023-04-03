@@ -410,7 +410,7 @@ namespace Fingrid.Monitoring
                         //{ "Server", obj.Server },
                     {"Environment" ,  this.environment },
                     {"Institution",string.IsNullOrEmpty(currentObj.Institution) ? "N/A" : currentObj.Institution},
-                    {"InstitutionName", GetInstitutionName(currentObj.Institution) },
+                    {"InstitutionName",  InstitutionInfo.GetInstitutionName(currentObj.Institution,this.institutionsDict) },
                     //{"CRMName", GetCRMName(currentObj.Institution) },
                     {"ResponseCode", responsecode},
                     {"TechnicalSuccess", IsSuccessful(currentObj.ResponseCode) ? "Successful" : "Failed" },
@@ -460,7 +460,7 @@ namespace Fingrid.Monitoring
                 {
                     {"Environment" ,  this.environment },
                     {"ResponseCode", responsecode },
-                    {"InstitutionName", GetInstitutionName(currentObj.Institution) },
+                    {"InstitutionName",  InstitutionInfo.GetInstitutionName(currentObj.Institution,this.institutionsDict) },
                     {"CRMName", GetCRMName(currentObj.Institution) },
                     {"Institution",string.IsNullOrEmpty(currentObj.Institution) ? "N/A" : currentObj.Institution },
                     {"TechnicalSuccess", IsSuccessful(currentObj.ResponseCode) ? "Successful" : "Failed" },
@@ -521,7 +521,7 @@ namespace Fingrid.Monitoring
                 {
                     {"Environment" ,  this.environment },
                     {"ResponseCode", responsecode},
-                    {"InstitutionName", GetInstitutionName(currentObj.Institution) },
+                    {"InstitutionName",  InstitutionInfo.GetInstitutionName(currentObj.Institution,this.institutionsDict) },
                     {"CRMName", GetCRMName(currentObj.Institution) },
                     {"Institution", string.IsNullOrEmpty(currentObj.Institution) ? "N/A" : currentObj.Institution },
                     {"TechnicalSuccess", IsSuccessful(currentObj.ResponseCode) ? "Successful" : "Failed" },

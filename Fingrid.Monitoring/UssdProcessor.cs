@@ -205,7 +205,7 @@ namespace Fingrid.Monitoring
 
         private Point GenerateRequestOrResponsePoint(UssdObj currentObj)
         {
-            Logger.Log($"Institution:{string.IsNullOrEmpty(currentObj.Institution)},InstitutionName {string.IsNullOrEmpty(GetInstitutionName(currentObj.Institution)?.ToString())}");
+            Logger.Log($"Institution:{string.IsNullOrEmpty(currentObj.Institution)},InstitutionName {string.IsNullOrEmpty( InstitutionInfo.GetInstitutionName(currentObj.Institution,this.institutionsDict)?.ToString())}");
             Logger.Log($"Network:{string.IsNullOrEmpty(currentObj.Network)},TransactionType {string.IsNullOrEmpty(currentObj.TransactionType)}");
             Logger.Log($"PhoneNo:{string.IsNullOrEmpty(currentObj.PhoneNo)}");
             var pointToWrite = new Point()
@@ -215,7 +215,7 @@ namespace Fingrid.Monitoring
                 Tags = new Dictionary<string, object>()
                 {
                         //{ "Server", obj.Server },
-                    {"InstitutionName", GetInstitutionName(currentObj.Institution) },
+                    {"InstitutionName",  InstitutionInfo.GetInstitutionName(currentObj.Institution,this.institutionsDict) },
                     {"Network", currentObj.Network },
                     {"TransactionType",  currentObj.TransactionType},
                 },
@@ -247,7 +247,7 @@ namespace Fingrid.Monitoring
                 Measurement = "Trx2", // serie/measurement/table to write into
                 Tags = new Dictionary<string, object>()
                 {
-                    {"InstitutionName", GetInstitutionName(currentObj.Institution) },
+                    {"InstitutionName", InstitutionInfo.GetInstitutionName(currentObj.Institution,this.institutionsDict) },
                     //{"RequestType", currentObj.Number == "1" ? 1  : 2},
                     {"Network", currentObj.Network },
                     {"TransactionType",  currentObj.TransactionType},
