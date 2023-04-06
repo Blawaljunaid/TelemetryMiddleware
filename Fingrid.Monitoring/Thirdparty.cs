@@ -165,7 +165,7 @@ namespace Fingrid.Monitoring
                     {"TransactionType", currentObj.TransactionType },
                     {"ResponseCode", currentObj.TransactionResponseCode },
                     {"TagStatus", currentObj.Status },
-                    {"InstitutionName", GetInstitutionName(currentObj.InstitutionCode) },
+                    {"InstitutionName", InstitutionInfo.GetInstitutionName(currentObj.InstitutionCode,this.institutionsDict) },
                     {"InstitutionGroup" , GetGroup(currentObj.InstitutionCode, this.integrationFIs, this.BanKInTheBoxFIs) },
                     {"TechnicalSuccess", IsSuccessful(currentObj.TransactionResponseCode) ? "Successful" : "Failed" },
 
@@ -180,7 +180,6 @@ namespace Fingrid.Monitoring
                     { "PendingCount", currentObj.Status == "Pending" ? 1 : 0},
                     { "FailedCount", currentObj.Status == "Failed" ? 1 : 0},
                     {"UniqueId", currentObj.UniqueId },
-                    {"InstitutionCode", currentObj.InstitutionCode },
                     { "TechnicalSuccessCnt", IsSuccessful(currentObj.TransactionResponseCode) ? 1 : 0 },
                     {"TotalCnt", 1},
                 },
