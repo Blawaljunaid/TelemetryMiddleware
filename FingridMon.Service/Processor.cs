@@ -113,7 +113,7 @@ namespace FingridMon.Service
                        processors.Add(new Fingrid.Monitoring.ABSServiceProcessor.SterlingInwardsTransferService(loader));
 
                        //Latest guys
-                       processors.Add(new Fingrid.Monitoring.QoreBIBTransactionProcessor(loader, institutions));
+                       //processors.Add(new Fingrid.Monitoring.QoreBIBTransactionProcessor(loader, institutions));
                        processors.Add(new Fingrid.Monitoring.BankoneWebApi(loader, institutions));
 
                        processors.ForEach(p => p.StartListening());
