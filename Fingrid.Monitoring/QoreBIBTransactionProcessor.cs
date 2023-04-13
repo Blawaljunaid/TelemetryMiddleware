@@ -24,6 +24,7 @@ namespace Fingrid.Monitoring
         private readonly ConcurrentDictionary<string, QoreBIBTransactionObj> _onUsReqDict = null;
         private static readonly ConcurrentDictionary<string, string> Thresholds = new ConcurrentDictionary<string, string>();
 
+        private readonly ConcurrentDictionary<string, QoreBIBTransactionObj> _transferObj = null;
 
         public QoreBIBTransactionProcessor(Loader loader, List<Institution> institutions) :
             base(loader, "QoreBIBTransactions", "__Monitoring.Qore.Transactions.BIB")
@@ -35,6 +36,7 @@ namespace Fingrid.Monitoring
             this._onUsReqDict = new ConcurrentDictionary<string, QoreBIBTransactionObj>();
             this.institutionsDict = new Dictionary<string, Institution>();
 
+            this._transferObj = new ConcurrentDictionary<string, QoreBIBTransactionObj>();
             //foreach (var institution in institutions)
             //{
             //    if (!this.institutionsDict.ContainsKey(institution.Code))
@@ -122,7 +124,7 @@ namespace Fingrid.Monitoring
                 // sample message:  "15bce980-b198-4f37-b314-4678702eb5a9,Staging,BankOneInternetBanking,Successful,00,Intra Bank Transfer,13-01-2023 14:55:51:8476697 PM,2,ProvidusInternetBankingService.SameBankTransfer,Api Call Response"
                 
                 message = message.Trim('"', ' ');
-                Logger.Log(message);
+                //Logger.Log(message);
 
                 string[] inputParam = message.Split(',');
 
@@ -138,7 +140,7 @@ namespace Fingrid.Monitoring
                     TransactionLevel = inputParam[7].Trim(),
                     CommandName = inputParam[8].Trim(),
                     ProcessStatus = inputParam[9].Trim(),
-                    InstitutionName = inputParam.Length > 10 ? !string.IsNullOrEmpty(inputParam[10]) ? inputParam[10].Trim() : "NA" : string.Empty,
+                    InstitutionName = inputParam[10].Trim()
                 };
 
                 Logger.Log("QoreBIBTransaction Object {0},{1},{2},{3},{4},{5} converted.", obj.UniqueId, obj.Client, obj.Response, obj.TransactionCategory, obj.CommandName, obj.ProcessStatus);
@@ -177,7 +179,21 @@ namespace Fingrid.Monitoring
                         {
                             //Command Entry
                             Logger.Log($"Recording {obj.ProcessStatus} object with id {obj.UniqueId}");
-                            _entry.AddOrUpdate(obj.UniqueId, obj, (val1, val2) => obj);
+
+                            switch (obj.TransactionCategory)
+                            {
+                                case "Transfer":
+                                    {
+                                        _transferObj.AddOrUpdate(obj.UniqueId, obj, (val1, val2) => obj);
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        _entry.AddOrUpdate(obj.UniqueId, obj, (val1, val2) => obj);
+                                        break;
+                                    }
+                            }
+
                             break;
                         }
                     case "Api Call Request":
@@ -207,7 +223,10 @@ namespace Fingrid.Monitoring
 
                             if (!this._apiCall.TryGetValue(obj.UniqueId, out intialQoreBIBTransactionObj))
                             {
-                                break;
+                                if (!this._transferObj.TryGetValue(obj.UniqueId, out intialQoreBIBTransactionObj))
+                                {
+                                    break;
+                                }
                             }
                             #region On Us 
                             var time = obj.TransactionTime.Subtract(intialQoreBIBTransactionObj.TransactionTime).TotalMilliseconds;
@@ -223,6 +242,70 @@ namespace Fingrid.Monitoring
                             var apiDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
                             Logger.Log($"DONE WRITING to influx for {obj.ProcessStatus} object with id {obj.UniqueId}");
 
+                            if(obj.TransactionCategory == "Transfer" || obj.TransactionCategory == "Intra Bank Transfer" || obj.TransactionCategory == "Airtime Top Up")
+                            {
+                                //Calculate total duration
+                                Logger.Log($"Recording {obj.ProcessStatus} object with id {obj.UniqueId}");
+                                Logger.Log($"Calculating the Total duration for the process with id {obj.UniqueId}");
+                                if (this._entry.TryRemove(obj.UniqueId, out intialQoreBIBTransactionObj))
+                                {
+                                    #region On Us
+                                    if (this._onUsReqDict.ContainsKey(obj.UniqueId))
+                                    {
+                                        var time2 = obj.TransactionTime.Subtract(intialQoreBIBTransactionObj.TransactionTime).TotalMilliseconds;
+                                        var dObj2 = this._onUsReqDict[obj.UniqueId];
+                                        var timeDifference = time2 - dObj2.TimeDifference;
+                                        Logger.Log($"Generating point in {obj.ProcessStatus} process for On Us Transactions object with id {obj.UniqueId}");
+                                        var processPoint = GeneratePoint(obj, dObj, "On Us Transactions", timeDifference);
+                                        Logger.Log($"Generating point for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId} complete");
+                                        Logger.Log($"Start writing to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
+                                        var difference = await influxDbClient.WriteAsync(databaseName, processPoint);
+                                        Logger.Log($"DONE WRITING to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
+                                    }
+                                    #endregion
+                                    Logger.Log($"Generating point for Total Duration for request with id {obj.UniqueId}");
+                                    processPointToWrite = GeneratePoint(obj, intialQoreBIBTransactionObj, "Total Duration");
+                                    Logger.Log($"Generating point for Total Duration for request with id {obj.UniqueId} complete");
+                                    Logger.Log($"Start writing to influx for Total Duration for request with id {obj.UniqueId}");
+                                    var totalDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                                    Logger.Log($"DONE WRITING to influx for Total Duration for request with id {obj.UniqueId}");
+                                }else if(this._transferObj.TryGetValue(obj.UniqueId, out intialQoreBIBTransactionObj))
+                                {
+                                    #region On Us
+                                    if (this._onUsReqDict.ContainsKey(obj.UniqueId))
+                                    {
+                                        var time2 = obj.TransactionTime.Subtract(intialQoreBIBTransactionObj.TransactionTime).TotalMilliseconds;
+                                        var dObj2 = this._onUsReqDict[obj.UniqueId];
+                                        var timeDifference = time2 - dObj2.TimeDifference;
+                                        Logger.Log($"Generating point in {obj.ProcessStatus} process for On Us Transactions object with id {obj.UniqueId}");
+                                        var processPoint = GeneratePoint(obj, dObj, "On Us Transactions", timeDifference);
+                                        Logger.Log($"Generating point for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId} complete");
+                                        Logger.Log($"Start writing to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
+                                        var difference = await influxDbClient.WriteAsync(databaseName, processPoint);
+                                        Logger.Log($"DONE WRITING to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
+                                    }
+                                    #endregion
+                                    Logger.Log($"Generating point for Total Duration for request with id {obj.UniqueId}");
+                                    processPointToWrite = GeneratePoint(obj, intialQoreBIBTransactionObj, "Total Duration");
+                                    Logger.Log($"Generating point for Total Duration for request with id {obj.UniqueId} complete");
+                                    Logger.Log($"Start writing to influx for Total Duration for request with id {obj.UniqueId}");
+                                    var totalDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                                    Logger.Log($"DONE WRITING to influx for Total Duration for request with id {obj.UniqueId}");
+                                }
+
+                                //calculate post-processing duration
+                                QoreBIBTransactionObj postEntry = null;
+                                if (this._postEntry.TryRemove(obj.UniqueId, out postEntry))
+                                {
+                                    Logger.Log($"Generating point for Post Processing Duration for request with id {obj.UniqueId}");
+                                    var pointToWrite = GeneratePoint(obj, postEntry, "Post Processing Duration");
+                                    Logger.Log($"Generating point for Post Processing Duration for request with id {obj.UniqueId} complete");
+                                    Logger.Log($"Start writing to influx for Post Processing Duration for request with id {obj.UniqueId}");
+                                    var postProDu = await influxDbClient.WriteAsync(databaseName, pointToWrite);
+                                    Logger.Log($"DONE WRITING to influx for Post Processing Duration for request with id {obj.UniqueId}");
+                                }
+                            }
+
                             break;
                         }
                     case "Command Exit":
@@ -230,7 +313,29 @@ namespace Fingrid.Monitoring
                             //Calculate total duration
                             Logger.Log($"Recording {obj.ProcessStatus} object with id {obj.UniqueId}");
                             Logger.Log($"Calculating the Total duration for the process with id {obj.UniqueId}");
-                            if (this._entry.TryRemove(obj.UniqueId, out intialQoreBIBTransactionObj))
+                            if (this._entry.TryRemove(obj.UniqueId, out intialQoreBIBTransactionObj) )
+                            {
+                                #region On Us
+                                if (this._onUsReqDict.ContainsKey(obj.UniqueId))
+                                {
+                                    var time = obj.TransactionTime.Subtract(intialQoreBIBTransactionObj.TransactionTime).TotalMilliseconds;
+                                    var dObj = this._onUsReqDict[obj.UniqueId];
+                                    var timeDifference = time - dObj.TimeDifference;
+                                    Logger.Log($"Generating point in {obj.ProcessStatus} process for On Us Transactions object with id {obj.UniqueId}");
+                                    var processPoint = GeneratePoint(obj, dObj, "On Us Transactions", timeDifference);
+                                    Logger.Log($"Generating point for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId} complete");
+                                    Logger.Log($"Start writing to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
+                                    var difference = await influxDbClient.WriteAsync(databaseName, processPoint);
+                                    Logger.Log($"DONE WRITING to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
+                                }
+                                #endregion
+                                Logger.Log($"Generating point for Total Duration for request with id {obj.UniqueId}");
+                                processPointToWrite = GeneratePoint(obj, intialQoreBIBTransactionObj, "Total Duration");
+                                Logger.Log($"Generating point for Total Duration for request with id {obj.UniqueId} complete");
+                                Logger.Log($"Start writing to influx for Total Duration for request with id {obj.UniqueId}");
+                                var totalDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                                Logger.Log($"DONE WRITING to influx for Total Duration for request with id {obj.UniqueId}");
+                            }else if(this._transferObj.TryGetValue(obj.UniqueId, out intialQoreBIBTransactionObj))
                             {
                                 #region On Us
                                 if (this._onUsReqDict.ContainsKey(obj.UniqueId))
