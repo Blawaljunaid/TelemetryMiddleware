@@ -52,8 +52,10 @@ namespace Fingrid.Monitoring
                     {
                         try
                         {
-
-                            BreakMessageAndFlush(message);
+                            //if(message.ToString().Contains("Providus Pay bill"))
+                            //{
+                                BreakMessageAndFlush(message);
+                            //}
                         }
                         catch (Exception ex)
                         {

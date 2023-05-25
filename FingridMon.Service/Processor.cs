@@ -115,6 +115,7 @@ namespace FingridMon.Service
                        //Latest guys
                        processors.Add(new Fingrid.Monitoring.QoreBIBTransactionProcessor(loader, institutions));
                        processors.Add(new Fingrid.Monitoring.BankoneWebApi(loader, institutions));
+                       processors.Add(new Fingrid.Monitoring.RecovaProcessor(loader));
 
                        processors.ForEach(p => p.StartListening());
 
