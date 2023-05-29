@@ -1,16 +1,6 @@
 ﻿using Fingrid.Monitoring.Utility;
 using InfluxDB.Net.Models;
-using Jil;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Fingrid.Monitoring.BankoneWebApi;
-using static Fingrid.Monitoring.BaseIBWebClientFlow;
 
 namespace Fingrid.Monitoring
 {
@@ -31,7 +21,7 @@ namespace Fingrid.Monitoring
             public string ResponseMessage { get; set; }
             public string InstitutionCode { get; set; }
             public string InstitutionName { get; set; }
-            public double Amount { get; set; }
+            public double? Amount { get; set; }
             public string TransactionType { get; set; }
             public string Status { get; set; }
             public DateTime CreateDate { get; set; }
@@ -41,17 +31,30 @@ namespace Fingrid.Monitoring
         {
             try
             {
-
-
                 Logger.Log("");
                 Logger.Log(message);
-                // sample message:  "GetAccountByAccountNumber,8d44f45d-d12e-4521-bb12-28e24b8c5ae2,true,20-01-2023 11:38:12:5743448 AM,Failed,No savings/current account was found with the account number: 00510012000003282,100614,dev"
-                //message = message.Trim('"', ' ');
-                //message = message.Replace('"', '\"');
-                //Logger.Log(message);
-                //string[] inputParam = message.Split(',');
+                //message = message.Replace("TransactionTime", "SomethingElse").Trim('"', ' ');
+                message = message.Trim('"', ' ');
+                Logger.Log(message);
 
-                RecovaProcessorObj obj = JsonConvert.DeserializeObject<RecovaProcessorObj>(message);
+                string[] inputParam = message.Split(',');
+
+                //"testbackt23244,01,Sorry, we are unable to process your request at this time. Please try again or report this issue., 014,Sterling Bank,0.0,Partial Debit Transfer,Failed,2023-05-12T18:31:49.6106884 01:00"
+                
+                //RecovaProcessorObj obj = JsonConvert.DeserializeObject<RecovaProcessorObj>(message);
+
+                RecovaProcessorObj obj = new RecovaProcessorObj
+                {
+                    RequestId = !string.IsNullOrEmpty(inputParam[0]) ? inputParam[0].Trim() : "NA",
+                    ResponseCode = !string.IsNullOrEmpty(inputParam[1]) ? inputParam[1].Trim() : "NA",
+                    ResponseMessage = !string.IsNullOrEmpty(inputParam[2]) ? inputParam[2].Trim() : "NA",
+                    InstitutionCode = !string.IsNullOrEmpty(inputParam[3]) ? inputParam[3].Trim() : "NA",
+                    InstitutionName = !string.IsNullOrEmpty(inputParam[4]) ? inputParam[4].Trim() : "NA",
+                    Amount = !string.IsNullOrEmpty(inputParam[5]) ? double.Parse(inputParam[5].Trim()) : null,
+                    TransactionType = !string.IsNullOrEmpty(inputParam[6]) ? inputParam[6].Trim() : "NA",
+                    Status = !string.IsNullOrEmpty(inputParam[7]) ? inputParam[7].Trim() : "NA",
+                    CreateDate = DateTime.ParseExact(inputParam[8].Trim(), "dd-MM-yyyy HH:mm:ss:fffffff tt", System.Globalization.CultureInfo.InvariantCulture),
+                };
 
 
                 Logger.Log("RecovaProcessor Object {0},{1},{2},{3},{4},{5} converted.", obj.RequestId, obj.ResponseCode, obj.TransactionType, obj.Status, obj.InstitutionName, obj.ResponseMessage);
