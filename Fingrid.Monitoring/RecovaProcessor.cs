@@ -9,7 +9,7 @@ namespace Fingrid.Monitoring
         ConcurrentDictionary<string, RecovaProcessorObj> objDict = null;
 
         public RecovaProcessor(Loader loader)
-           : base(loader, "RecovaProcessor", "recova_middleware_transactions-staging")
+           : base(loader, "RecovaProcessor", "recova_middleware_transactions-production")
         {
             this.objDict = new ConcurrentDictionary<string, RecovaProcessorObj>();
 
