@@ -12,12 +12,12 @@ namespace Fingrid.Monitoring
 
     public class BaseMobileServerFlow : BaseProcessor
     {
-        string Environment;
+        string environment;
         Dictionary<string, Institution> institutionsDict = null;
         public BaseMobileServerFlow(Loader loader, List<Institution> institutions, string environmentName, string channelName) :
             base(loader, "InternetBankingTransactions", channelName)
         {
-            Environment = environmentName;
+            environment = environmentName;
             this.institutionsDict = new Dictionary<string, Institution>();
             foreach (var institution in institutions)
             {
@@ -67,11 +67,21 @@ namespace Fingrid.Monitoring
                 var pointToWrite = GeneratePoint(obj);
                 Logger.Log("Generate point complete");
 
-                Logger.Log("Start writing to influx");
-                //Point is then passed into Client.WriteAsync method together with the database name:
-                var response = await influxDbClient.WriteAsync(databaseName, pointToWrite);
-
-                Logger.Log("DONE writing to influx");
+                try
+                {
+                    Console.WriteLine("Start writing to influx");
+                    var response = await influxDbClient.WriteAsync(databaseName, pointToWrite);
+                    Console.WriteLine("DONE writing to influx");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("Issue writing to influx DB");
+                    Logger.Log(ex.Message);
+                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                    // if for any reason we switch back to using this as a windows service
+                    // you will have to comment that Exit() line of code in all the other files to avoid service
+                    // crashing anytime inlfux has connection issue
+                }
             }
             catch (Exception ex)
             {
@@ -100,7 +110,7 @@ namespace Fingrid.Monitoring
                                     { "ProcessName", currentObj.ProcessName},
                                     { "FlowName", currentObj.FlowName},
                                     { "ProcessStatus", currentObj.ProcessStatus},
-                                    {"Environment" ,  this.Environment },
+                                    {"Environment" ,  this.environment },
 
                                 },
                 Fields = new Dictionary<string, object>()
@@ -308,7 +318,7 @@ namespace Fingrid.Monitoring
     //                    { "ProcessName", currentObj.ProcessName},
     //                    { "FlowName", currentObj.FlowName},
     //                    { "ProcessStatus", currentObj.ProcessStatus},
-    //                    {"Environment" ,  this.environment },
+    //                    {"environment" ,  this.environment },
 
     //                },
     //                Fields = new Dictionary<string, object>()

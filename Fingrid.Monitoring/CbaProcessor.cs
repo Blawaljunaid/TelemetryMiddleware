@@ -219,6 +219,7 @@ namespace Fingrid.Monitoring
             var pointToWrite = GeneratePoint(obj, initialRequestObj);
 
             WriteToInflux(pointToWrite);
+
             Logger.Log("");
 
 
@@ -450,6 +451,10 @@ namespace Fingrid.Monitoring
             {
                 Logger.Log("Wierd Error sort of");
                 Logger.Log(string.Format("Error when writing to influx db: {0}", ex.InnerException + ex.Message + ex.StackTrace));
+                Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                                    // if for any reason we switch back to using this as a windows service
+                                                    // you will have to comment that Exit() line of code in all the other files to avoid service
+                                                    // crashing anytime inlfux has connection issue
             }
         }
 

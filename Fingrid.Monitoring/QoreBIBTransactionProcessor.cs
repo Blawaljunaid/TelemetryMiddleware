@@ -145,31 +145,6 @@ namespace Fingrid.Monitoring
 
                 Logger.Log("QoreBIBTransaction Object {0},{1},{2},{3},{4},{5} converted.", obj.UniqueId, obj.Client, obj.Response, obj.TransactionCategory, obj.CommandName, obj.ProcessStatus);
 
-
-                //if (obj.Level == "1")
-                //{
-                //    Logger.Log("Recording Request object with id: {0}", obj.UniqueId);
-                //    this.objDict.AddOrUpdate(obj.UniqueId, obj, (val1, val2) => obj);
-                //    return;
-                //}
-
-                //QoreBIBTransactionObj initialObj = null;
-                //Logger.Log("Recording response object with id: {0}", obj.UniqueId);
-                //if (!this.objDict.TryRemove(obj.UniqueId, out initialObj))
-                //{
-                //    Logger.Log("Could not find response object with id: {0}", obj.UniqueId);
-                //    return;
-                //}
-
-                //Logger.Log("Sending response and request object to generate point to send to influx");
-                //var pointToWrite = GeneratePoint(obj, initialObj);
-                //Logger.Log("Generate point complete");
-
-
-                //Logger.Log("Start writing to influx");
-                //var response = await influxDbClient.WriteAsync(databaseName, pointToWrite);
-                //Logger.Log("DONE writing to influx");
-
                 QoreBIBTransactionObj intialQoreBIBTransactionObj = null;
                 Point processPointToWrite = null;
 
@@ -210,7 +185,20 @@ namespace Fingrid.Monitoring
                             processPointToWrite = GeneratePoint(obj, intialQoreBIBTransactionObj, "Pre Processing Duration");
                             Logger.Log($"Generating point for {obj.ProcessStatus} object with id {obj.UniqueId} complete");
                             Logger.Log($"Start writing to influx for {obj.ProcessStatus} object with id {obj.UniqueId}");
-                            var preProcessing = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                            try
+                            {
+                                var preProcessing = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log("Issue writing to influx DB");
+                                Logger.Log(ex.Message);
+                                Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                // if for any reason we switch back to using this as a windows service
+                                // you will have to comment that Exit() line of code in all the other files to avoid service
+                                // crashing anytime inlfux has connection issue
+                            }
+                            
                             Logger.Log($"DONE WRITING to influx for {obj.ProcessStatus} object with id {obj.UniqueId}");
 
                             break;
@@ -239,7 +227,20 @@ namespace Fingrid.Monitoring
                             processPointToWrite = GeneratePoint(obj, intialQoreBIBTransactionObj, "Api Call Duration");
                             Logger.Log($"Generating point for {obj.ProcessStatus} object with id {obj.UniqueId} complete");
                             Logger.Log($"Start writing to influx for {obj.ProcessStatus} object with id {obj.UniqueId}");
-                            var apiDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                            try
+                            {
+                                var apiDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log("Issue writing to influx DB");
+                                Logger.Log(ex.Message);
+                                Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                // if for any reason we switch back to using this as a windows service
+                                // you will have to comment that Exit() line of code in all the other files to avoid service
+                                // crashing anytime inlfux has connection issue
+                            }
+                            
                             Logger.Log($"DONE WRITING to influx for {obj.ProcessStatus} object with id {obj.UniqueId}");
 
                             if(obj.TransactionCategory == "Transfer" || obj.TransactionCategory == "Intra Bank Transfer" || obj.TransactionCategory == "Airtime Top Up")
@@ -259,7 +260,20 @@ namespace Fingrid.Monitoring
                                         var processPoint = GeneratePoint(obj, dObj, "On Us Transactions", timeDifference);
                                         Logger.Log($"Generating point for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId} complete");
                                         Logger.Log($"Start writing to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
-                                        var difference = await influxDbClient.WriteAsync(databaseName, processPoint);
+                                        try
+                                        {
+                                            var difference = await influxDbClient.WriteAsync(databaseName, processPoint);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Logger.Log("Issue writing to influx DB");
+                                            Logger.Log(ex.Message);
+                                            Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                                                 // if for any reason we switch back to using this as a windows service
+                                                                 // you will have to comment that Exit() line of code in all the other files to avoid service
+                                                                 // crashing anytime inlfux has connection issue
+                                        }
+                                        
                                         Logger.Log($"DONE WRITING to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
                                     }
                                     #endregion
@@ -267,7 +281,20 @@ namespace Fingrid.Monitoring
                                     processPointToWrite = GeneratePoint(obj, intialQoreBIBTransactionObj, "Total Duration");
                                     Logger.Log($"Generating point for Total Duration for request with id {obj.UniqueId} complete");
                                     Logger.Log($"Start writing to influx for Total Duration for request with id {obj.UniqueId}");
-                                    var totalDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                                    try
+                                    {
+                                        var totalDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.Log("Issue writing to influx DB");
+                                        Logger.Log(ex.Message);
+                                        Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                                             // if for any reason we switch back to using this as a windows service
+                                                             // you will have to comment that Exit() line of code in all the other files to avoid service
+                                                             // crashing anytime inlfux has connection issue
+                                    }
+                                    
                                     Logger.Log($"DONE WRITING to influx for Total Duration for request with id {obj.UniqueId}");
                                 }else if(this._transferObj.TryGetValue(obj.UniqueId, out intialQoreBIBTransactionObj))
                                 {
@@ -281,7 +308,21 @@ namespace Fingrid.Monitoring
                                         var processPoint = GeneratePoint(obj, dObj, "On Us Transactions", timeDifference);
                                         Logger.Log($"Generating point for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId} complete");
                                         Logger.Log($"Start writing to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
-                                        var difference = await influxDbClient.WriteAsync(databaseName, processPoint);
+
+                                        try
+                                        {
+                                            var difference = await influxDbClient.WriteAsync(databaseName, processPoint);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Logger.Log("Issue writing to influx DB");
+                                            Logger.Log(ex.Message);
+                                            Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                                                 // if for any reason we switch back to using this as a windows service
+                                                                 // you will have to comment that Exit() line of code in all the other files to avoid service
+                                                                 // crashing anytime inlfux has connection issue
+                                        }
+                                        
                                         Logger.Log($"DONE WRITING to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
                                     }
                                     #endregion
@@ -289,7 +330,20 @@ namespace Fingrid.Monitoring
                                     processPointToWrite = GeneratePoint(obj, intialQoreBIBTransactionObj, "Total Duration");
                                     Logger.Log($"Generating point for Total Duration for request with id {obj.UniqueId} complete");
                                     Logger.Log($"Start writing to influx for Total Duration for request with id {obj.UniqueId}");
-                                    var totalDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                                    try
+                                    {
+                                        var totalDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.Log("Issue writing to influx DB");
+                                        Logger.Log(ex.Message);
+                                        Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                                             // if for any reason we switch back to using this as a windows service
+                                                             // you will have to comment that Exit() line of code in all the other files to avoid service
+                                                             // crashing anytime inlfux has connection issue
+                                    }
+                                    
                                     Logger.Log($"DONE WRITING to influx for Total Duration for request with id {obj.UniqueId}");
                                 }
 
@@ -301,7 +355,20 @@ namespace Fingrid.Monitoring
                                     var pointToWrite = GeneratePoint(obj, postEntry, "Post Processing Duration");
                                     Logger.Log($"Generating point for Post Processing Duration for request with id {obj.UniqueId} complete");
                                     Logger.Log($"Start writing to influx for Post Processing Duration for request with id {obj.UniqueId}");
-                                    var postProDu = await influxDbClient.WriteAsync(databaseName, pointToWrite);
+                                    try
+                                    {
+                                        var postProDu = await influxDbClient.WriteAsync(databaseName, pointToWrite);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.Log("Issue writing to influx DB");
+                                        Logger.Log(ex.Message);
+                                        Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                                             // if for any reason we switch back to using this as a windows service
+                                                             // you will have to comment that Exit() line of code in all the other files to avoid service
+                                                             // crashing anytime inlfux has connection issue
+                                    }
+                                    
                                     Logger.Log($"DONE WRITING to influx for Post Processing Duration for request with id {obj.UniqueId}");
                                 }
                             }
@@ -325,7 +392,20 @@ namespace Fingrid.Monitoring
                                     var processPoint = GeneratePoint(obj, dObj, "On Us Transactions", timeDifference);
                                     Logger.Log($"Generating point for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId} complete");
                                     Logger.Log($"Start writing to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
-                                    var difference = await influxDbClient.WriteAsync(databaseName, processPoint);
+                                    try
+                                    {
+                                        var difference = await influxDbClient.WriteAsync(databaseName, processPoint);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.Log("Issue writing to influx DB");
+                                        Logger.Log(ex.Message);
+                                        Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                                             // if for any reason we switch back to using this as a windows service
+                                                             // you will have to comment that Exit() line of code in all the other files to avoid service
+                                                             // crashing anytime inlfux has connection issue
+                                    }
+                                    
                                     Logger.Log($"DONE WRITING to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
                                 }
                                 #endregion
@@ -333,7 +413,20 @@ namespace Fingrid.Monitoring
                                 processPointToWrite = GeneratePoint(obj, intialQoreBIBTransactionObj, "Total Duration");
                                 Logger.Log($"Generating point for Total Duration for request with id {obj.UniqueId} complete");
                                 Logger.Log($"Start writing to influx for Total Duration for request with id {obj.UniqueId}");
-                                var totalDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                                try
+                                {
+                                    var totalDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Log("Issue writing to influx DB");
+                                    Logger.Log(ex.Message);
+                                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                                         // if for any reason we switch back to using this as a windows service
+                                                         // you will have to comment that Exit() line of code in all the other files to avoid service
+                                                         // crashing anytime inlfux has connection issue
+                                }
+                                
                                 Logger.Log($"DONE WRITING to influx for Total Duration for request with id {obj.UniqueId}");
                             }else if(this._transferObj.TryGetValue(obj.UniqueId, out intialQoreBIBTransactionObj))
                             {
@@ -347,7 +440,20 @@ namespace Fingrid.Monitoring
                                     var processPoint = GeneratePoint(obj, dObj, "On Us Transactions", timeDifference);
                                     Logger.Log($"Generating point for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId} complete");
                                     Logger.Log($"Start writing to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
-                                    var difference = await influxDbClient.WriteAsync(databaseName, processPoint);
+                                    try
+                                    {
+                                        var difference = await influxDbClient.WriteAsync(databaseName, processPoint);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.Log("Issue writing to influx DB");
+                                        Logger.Log(ex.Message);
+                                        Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                                             // if for any reason we switch back to using this as a windows service
+                                                             // you will have to comment that Exit() line of code in all the other files to avoid service
+                                                             // crashing anytime inlfux has connection issue
+                                    }
+                                    
                                     Logger.Log($"DONE WRITING to influx for On Us Transactions {obj.ProcessStatus} object with id {obj.UniqueId}");
                                 }
                                 #endregion
@@ -355,7 +461,20 @@ namespace Fingrid.Monitoring
                                 processPointToWrite = GeneratePoint(obj, intialQoreBIBTransactionObj, "Total Duration");
                                 Logger.Log($"Generating point for Total Duration for request with id {obj.UniqueId} complete");
                                 Logger.Log($"Start writing to influx for Total Duration for request with id {obj.UniqueId}");
-                                var totalDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                                try
+                                {
+                                    var totalDu = await influxDbClient.WriteAsync(databaseName, processPointToWrite);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Log("Issue writing to influx DB");
+                                    Logger.Log(ex.Message);
+                                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                                         // if for any reason we switch back to using this as a windows service
+                                                         // you will have to comment that Exit() line of code in all the other files to avoid service
+                                                         // crashing anytime inlfux has connection issue
+                                }
+                                
                                 Logger.Log($"DONE WRITING to influx for Total Duration for request with id {obj.UniqueId}");
                             }
 
@@ -367,7 +486,20 @@ namespace Fingrid.Monitoring
                                 var pointToWrite = GeneratePoint(obj, postEntry, "Post Processing Duration");
                                 Logger.Log($"Generating point for Post Processing Duration for request with id {obj.UniqueId} complete");
                                 Logger.Log($"Start writing to influx for Post Processing Duration for request with id {obj.UniqueId}");
-                                var postProDu = await influxDbClient.WriteAsync(databaseName, pointToWrite);
+                                try
+                                {
+                                    var postProDu = await influxDbClient.WriteAsync(databaseName, pointToWrite);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Log("Issue writing to influx DB");
+                                    Logger.Log(ex.Message);
+                                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                                         // if for any reason we switch back to using this as a windows service
+                                                         // you will have to comment that Exit() line of code in all the other files to avoid service
+                                                         // crashing anytime inlfux has connection issue
+                                }
+                                
                                 Logger.Log($"DONE WRITING to influx for Post Processing Duration for request with id {obj.UniqueId}");
                             }
                             break;

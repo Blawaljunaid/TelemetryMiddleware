@@ -212,16 +212,20 @@ namespace Fingrid.Monitoring
 
                 var requestOrResponsePoint = GenerateRequestOrResponsePoint(obj, requestOrResponseString, "ReversalTrx2", originatedFrom);
                 Logger.Log("From ProcessReversals method, We want to write this to influx: " + Newtonsoft.Json.JsonConvert.SerializeObject(requestOrResponsePoint));
-
                 try
                 {
-                    //Logger.Log("Influx DB is {0}null. Point is {1}null.", (influxDbClient == null ? "" : "NOT "), (pointToWrite == null ? "" : "NOT "));
+                    Console.WriteLine("Start writing to influx");
                     var response2 = await influxDbClient.WriteAsync(databaseName, requestOrResponsePoint);
+                    Console.WriteLine("DONE writing to influx");
                 }
                 catch (Exception ex)
                 {
+                    Logger.Log("Issue writing to influx DB");
                     Logger.Log("Error on ProcessReversals when writing to influx db: " + ex.Message);
-                    //Logger.Log(Newtonsoft.Json.JsonConvert.SerializeObject(requestOrResponsePoint));
+                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                    // if for any reason we switch back to using this as a windows service
+                    // you will have to comment that Exit() line of code in all the other files to avoid service
+                    // crashing anytime inlfux has connection issue
                 }
                 //Logger.Log("From ProcessReversals, I HAVE WRITTEN THIS TO INFLUX: " + Newtonsoft.Json.JsonConvert.SerializeObject(requestOrResponsePoint));
             }
@@ -290,11 +294,14 @@ namespace Fingrid.Monitoring
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log("ERROR: From ProcessRegularTransactions method, Trying to send this: " + Newtonsoft.Json.JsonConvert.SerializeObject(requestOrResponsePoint));
+                    Logger.Log("Issue writing to influx DB");
+                     Logger.Log("ERROR: From ProcessRegularTransactions method, Trying to send this: " + Newtonsoft.Json.JsonConvert.SerializeObject(requestOrResponsePoint));
                     Logger.Log("Error Generating a point in GeneratePoint method to send to influx db: " + ex.Message);
-                    //Logger.Log(ex.Message);
+                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                    // if for any reason we switch back to using this as a windows service
+                    // you will have to comment that Exit() line of code in all the other files to avoid service
+                    // crashing anytime inlfux has connection issue
                 }
-
                 //Logger.Log("From ProcessRegularTransactions method, I HAVE WRITTEN THIS TO INFLUX: " + Newtonsoft.Json.JsonConvert.SerializeObject(requestOrResponsePoint));
 
 

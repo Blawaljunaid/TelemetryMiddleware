@@ -1,4 +1,5 @@
-﻿using InfluxDB.Net;
+﻿using Fingrid.Monitoring.Utility;
+using InfluxDB.Net;
 using InfluxDB.Net.Infrastructure.Influx;
 using InfluxDB.Net.Models;
 using StackExchange.Redis;
@@ -96,23 +97,23 @@ namespace Fingrid.Monitoring
 
 
                 var requestOrResponsePoint = GenerateRequestOrResponsePoint(obj);
-
                 try
                 {
-                   Console.WriteLine($"---Logging Request or Response--- {obj.UniqueId}");
+                    Console.WriteLine($"---Logging Request or Response--- {obj.UniqueId}");
 
                     //Trace.TraceInformation("Influx DB is {0}null. Point is {1}null.", (influxDbClient == null ? "" : "NOT "), (pointToWrite == null ? "" : "NOT "));
                     var response2 = await influxDbClient.WriteAsync(databaseName, requestOrResponsePoint);
-                   Console.WriteLine($"---Done Logging Request or Response--- {obj.UniqueId}");
-
+                    Console.WriteLine($"---Done Logging Request or Response--- {obj.UniqueId}");
                 }
                 catch (Exception ex)
                 {
-                   Console.WriteLine($"Error on Saving Request/Response {obj.UniqueId}   Msg: {ex.Message} Stacktrace {ex.StackTrace}");
+                    Logger.Log("Issue writing to influx DB");
+                    Console.WriteLine($"Error on Saving Request/Response {obj.UniqueId}   Msg: {ex.Message} Stacktrace {ex.StackTrace}");
+                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                    // if for any reason we switch back to using this as a windows service
+                    // you will have to comment that Exit() line of code in all the other files to avoid service
+                    // crashing anytime inlfux has connection issue
                 }
-
-
-
 
                 if (!obj.IsResponse)
                 {
@@ -132,21 +133,33 @@ namespace Fingrid.Monitoring
                     return;
                 }
 
-
                 try
                 {
-                   Console.WriteLine($"---Logging TRX 1--- {obj.UniqueId}");
+                     Console.WriteLine($"---Logging TRX 1--- {obj.UniqueId}");
                     var pointToWrite = GeneratePoint(obj, initialRequestObj);
                     //Point is then passed into Client.WriteAsync method together with the database name:
 
                     var response = await influxDbClient.WriteAsync(databaseName, pointToWrite);
                    Console.WriteLine($"--- Done Logging TRX 1--- {obj.UniqueId}");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("Issue writing to influx DB");
+                    Console.WriteLine($"Error occured on saving Trx1 {obj.UniqueId}  Msg:{ex.Message}  Stacktrace: { ex.StackTrace}");
+                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                    // if for any reason we switch back to using this as a windows service
+                    // you will have to comment that Exit() line of code in all the other files to avoid service
+                    // crashing anytime inlfux has connection issue
+                }
+                try
+                {
+                  
 
                 }
                 catch (Exception ex)
 
                 {
-                   Console.WriteLine($"Error occured on saving Trx1 {obj.UniqueId}  Msg:{ex.Message}  Stacktrace: { ex.StackTrace}");
+                   
                 }
 
                Console.WriteLine($"---End--- {obj.UniqueId} \n\n");

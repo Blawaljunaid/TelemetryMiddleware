@@ -146,7 +146,13 @@ namespace Fingrid.Monitoring
                 {
                     Logger.Log($"Table 1 {obj.TransactionType} is Request {obj.IsRequest} id {obj.UniqueId}---{ex.Message}---     \n {ex.StackTrace}");
                     Logger.Log($"{ex.Message} | {ex.InnerException?.Message} | {ex.InnerException?.InnerException?.Message} | {ex.InnerException?.InnerException?.InnerException?.Message}");
+                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                         // if for any reason we switch back to using this as a windows service
+                                         // you will have to comment that Exit() line of code in all the other files to avoid service
+                                         // crashing anytime inlfux has connection issue
                 }
+
+
 
 
 
@@ -182,7 +188,10 @@ namespace Fingrid.Monitoring
                 catch (Exception ex)
                 {
                     Logger.Log($"Table 2 {obj.TransactionType} is Request {obj.IsRequest} id {obj.UniqueId}---{ex.Message}---     \n {ex.StackTrace}");
-
+                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                                         // if for any reason we switch back to using this as a windows service
+                                         // you will have to comment that Exit() line of code in all the other files to avoid service
+                                         // crashing anytime inlfux has connection issue
                 }
             }
             catch (Exception ex)

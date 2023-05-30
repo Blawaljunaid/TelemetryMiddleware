@@ -147,11 +147,14 @@ namespace Fingrid.Monitoring
                 }
                 catch (Exception ex)
                 {
+                    Logger.Log("Issue writing to influx DB");
                     Logger.Log($"Table 1 {obj.TransactionType} is Request {obj.IsResponse} id {obj.UniqueId}---{ex.Message}---     \n {ex.StackTrace}");
                     Logger.Log($"{ex.Message} | {ex.InnerException?.Message} | {ex.InnerException?.InnerException?.Message} | {ex.InnerException?.InnerException?.InnerException?.Message}");
+                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                    // if for any reason we switch back to using this as a windows service
+                    // you will have to comment that Exit() line of code in all the other files to avoid service
+                    // crashing anytime inlfux has connection issue
                 }
-
-
 
                 if (obj.IsResponse == "False")
                 {
@@ -180,17 +183,21 @@ namespace Fingrid.Monitoring
 
                 var pointToWrite2 = GeneratePoint(obj, initialRequestObj);
                 //Point is then passed into Client.WriteAsync method together with the database name:
+
                 try
                 {
                     Logger.Log("Start writing GeneratePoint to influx");
                     var response = await influxDbClient.WriteAsync(databaseName, pointToWrite2);
                     Logger.Log("DONE writing GeneratePoint to influx");
-
                 }
                 catch (Exception ex)
                 {
+                    Logger.Log("Issue writing to influx DB");
                     Logger.Log($"Table 2 {obj.TransactionType} is Request {obj.IsResponse} id {obj.UniqueId}---{ex.Message}---     \n {ex.StackTrace}");
-
+                    Environment.Exit(1); // Exit with a non-zero status code so that the docker container can restart
+                    // if for any reason we switch back to using this as a windows service
+                    // you will have to comment that Exit() line of code in all the other files to avoid service
+                    // crashing anytime inlfux has connection issue
                 }
             }
             catch (Exception ex)
