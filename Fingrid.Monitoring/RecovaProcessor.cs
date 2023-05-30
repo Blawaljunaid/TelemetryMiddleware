@@ -57,12 +57,11 @@ namespace Fingrid.Monitoring
                 };
 
 
-                Logger.Log("RecovaProcessor Object {0},{1},{2},{3},{4},{5} converted.", obj.RequestId, obj.ResponseCode, obj.TransactionType, obj.Status, obj.InstitutionName, obj.ResponseMessage);
+                 Logger.Log("RecovaProcessor Object {0},{1},{2},{3},{4},{5} converted.", obj.RequestId, obj.ResponseCode, obj.TransactionType, obj.Status, obj.InstitutionName, obj.ResponseMessage);
 
                 Console.WriteLine("Sending object to generate point to send to influx");
                 var pointToWrite = GeneratePoints(obj);
                 Console.WriteLine("Generate point complete");
-
 
                 Console.WriteLine("Start writing to influx");
                 var response = await influxDbClient.WriteAsync(databaseName, pointToWrite);
@@ -96,7 +95,8 @@ namespace Fingrid.Monitoring
                 {
                     //{"Time", currentObj.CreateDate.Subtract(initialObj.Time).TotalMilliseconds },
                     {"Time", currentObj.CreateDate.Millisecond },
-                    {"UniqueId", currentObj.RequestId },
+                    {"FailedCnt", currentObj.Status == "Failed" ? 1 : 0},
+                    {"TotalCnt", 1},
                     {"Amount", currentObj.Amount },
                     {"ResponseMessage", currentObj.ResponseMessage },
                     {"UniqueId", currentObj.RequestId },
