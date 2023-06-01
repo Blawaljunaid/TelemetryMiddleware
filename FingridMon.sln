@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AB054040-4FCD-4533-91EA-DB7060286057}"
 	ProjectSection(SolutionItems) = preProject
 		FingridMon.Service\Dockerfile = FingridMon.Service\Dockerfile
+		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
 Global
