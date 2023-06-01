@@ -100,6 +100,7 @@ namespace Fingrid.Monitoring
                     {"ResponseCode", currentObj.ResponseCode },
                     {"InstitutionName", currentObj.InstitutionName },
                     {"TransactionType", currentObj.TransactionType },
+                    {"ResponseMessage", currentObj.ResponseMessage },
                     {"Status", currentObj.Status },
 
                 },
@@ -110,7 +111,6 @@ namespace Fingrid.Monitoring
                     {"FailedCnt", currentObj.Status == "Failed" ? 1 : 0},
                     {"TotalCnt", 1},
                     {"Amount", currentObj.Amount },
-                    {"ResponseMessage", currentObj.ResponseMessage },
                     {"UniqueId", currentObj.RequestId },
                 },
                 Timestamp = DateTime.UtcNow // optional (can be set to any DateTime moment)
