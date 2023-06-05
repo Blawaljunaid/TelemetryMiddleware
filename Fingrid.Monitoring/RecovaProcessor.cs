@@ -21,7 +21,7 @@ namespace Fingrid.Monitoring
             public string ResponseMessage { get; set; }
             public string InstitutionCode { get; set; }
             public string InstitutionName { get; set; }
-            public string? Amount { get; set; }
+            public double? Amount { get; set; }
             public string TransactionType { get; set; }
             public string Status { get; set; }
             public DateTime CreateDate { get; set; }
@@ -50,7 +50,7 @@ namespace Fingrid.Monitoring
                     ResponseMessage = !string.IsNullOrEmpty(inputParam[2]) ? inputParam[2].Trim() : "NA",
                     InstitutionCode = !string.IsNullOrEmpty(inputParam[3]) ? inputParam[3].Trim() : "NA",
                     InstitutionName = !string.IsNullOrEmpty(inputParam[4]) ? inputParam[4].Trim() : "NA",
-                    Amount = !string.IsNullOrEmpty(inputParam[5]) ? inputParam[5].Trim() : "NA",
+                    Amount = !string.IsNullOrEmpty(inputParam[5]) ? double.Parse(inputParam[5].Trim()) : 0,
                     TransactionType = !string.IsNullOrEmpty(inputParam[6]) ? inputParam[6].Trim() : "NA",
                     Status = !string.IsNullOrEmpty(inputParam[7]) ? inputParam[7].Trim() : "NA",
                     CreateDate = DateTime.ParseExact(inputParam[8].Trim(), "dd-MM-yyyy HH:mm:ss:fffffff tt", System.Globalization.CultureInfo.InvariantCulture),
@@ -110,7 +110,7 @@ namespace Fingrid.Monitoring
                     {"Time", currentObj.CreateDate.Millisecond },
                     {"FailedCnt", currentObj.Status == "Failed" ? 1 : 0},
                     {"TotalCnt", 1},
-                    {"Amount", currentObj.Amount },
+                    {"Amount", currentObj.Amount! },
                     {"UniqueId", currentObj.RequestId },
                 },
                 Timestamp = DateTime.UtcNow // optional (can be set to any DateTime moment)
