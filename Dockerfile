@@ -18,4 +18,10 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
+# Delete the App.config file in the container
+RUN rm App.config
+# you might ask why
+# Well, because a volume that points to the App.config on the host server will be mounted when when the container is deployed from octopus
+# Config on host will be located at /fingridmon-config/App.config
+
 ENTRYPOINT ["dotnet", "FingridMon.Service.dll"]
