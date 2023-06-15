@@ -14,7 +14,7 @@ namespace Fingrid.Monitoring
         ConcurrentDictionary<string, RecovaAuthProcessorObj> objDict = null;
 
         public RecovaAuthProcessor(Loader loader)
-           : base(loader, "RecovaProcessor", "recova_auth-staging")
+           : base(loader, "RecovaProcessor", "recova_auth-production")
         {
             this.objDict = new ConcurrentDictionary<string, RecovaAuthProcessorObj>();
 
