@@ -12,6 +12,7 @@ namespace Fingrid.Monitoring.Utility
     public class Institution
     {
         private string CodeTemp;
+        public string Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public string InstitutionCode { get { return CodeTemp; } set { CodeTemp = value.PadLeft(3, '0'); } }
@@ -21,6 +22,7 @@ namespace Fingrid.Monitoring.Utility
     {
         private const string GET_BY_INSTITUTION_CODE = "mfbservice/GetMfbByInstitutionCode?institutionCode=";
         private const string GET_ALL_INSTITUTIONS = "mfbservice/GetAll";
+        private const string GET_ALL_RECOVA_INSTITUTIONS = "institutions/RetrieveAll";
 
         public static Institution GetInstitutionByCode(string institutionCode)
         {
@@ -85,6 +87,31 @@ namespace Fingrid.Monitoring.Utility
             catch { throw; }
         }
 
+        public static async Task<List<Institution>> GetRecovaInstitutions()
+        {
+            string apiPrefix = ConfigurationManager.AppSettings["RECOVAAPI"];
+            string uri = $"{apiPrefix}{GET_ALL_RECOVA_INSTITUTIONS}";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    Logger.Log(uri);
+                    HttpResponseMessage response = await client.GetAsync(uri);
+                    response.EnsureSuccessStatusCode();
+
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<List<Institution>>(responseContent);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception appropriately (e.g., log, return default value, etc.)
+                Logger.Log(ex.Message);
+                throw;
+            }
+        }
+
         public static String GetInstitutionName(string institutionCode, Dictionary<string, Institution> institutionsDict)
         {
             Institution inst = null;
@@ -97,5 +124,17 @@ namespace Fingrid.Monitoring.Utility
 
             return !String.IsNullOrEmpty(inst.Name) ? inst.Name : "Unknown Institution";
         }
+
+        public static String GetRecovaInstitutionName(string institutionId, Dictionary<string, Institution> institutionsDict)
+        {
+            Institution inst = null;
+            if (!institutionsDict.TryGetValue(institutionId, out inst))
+            {
+                inst = new Institution { Name = institutionId, Id = institutionId };
+            }
+
+            return !String.IsNullOrEmpty(inst.Name) ? inst.Name : "Unknown Institution";
+        }
+
     }
 }

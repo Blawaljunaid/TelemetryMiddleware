@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Timers;
 using Timer = System.Threading.Timer;
+using System.Security.Policy;
 
 namespace FingridMon.Service
 {
@@ -36,12 +37,13 @@ namespace FingridMon.Service
         {
             System.Threading.Thread thWorker = new System.Threading.Thread(new System.Threading.ThreadStart(
 
-               delegate
+               async delegate
                {
                    try
                    {
                        isBusy = true;
                        var institutions = LoadInstitutions();
+                       var recovaInstitutions = await LoadRecovaInstitutionsAsync();
 
 
                        loader.LoadAll();
@@ -117,6 +119,7 @@ namespace FingridMon.Service
                        processors.Add(new Fingrid.Monitoring.BankoneWebApi(loader, institutions));
                        processors.Add(new Fingrid.Monitoring.RecovaProcessor(loader));
                        processors.Add(new Fingrid.Monitoring.RecovaAuthProcessor(loader));
+                       processors.Add(new Fingrid.Monitoring.RecovaMandateProcessor(loader,recovaInstitutions));
 
                        processors.ForEach(p => p.StartListening());
 
@@ -169,6 +172,20 @@ namespace FingridMon.Service
             foreach (var i in institutions.OrderBy(i => i.Code))
             {
                 Trace.TraceInformation(i.Code + " : " + i.Name);
+            }
+
+            System.Threading.Thread.Sleep(1000);
+            return institutions;
+        }
+
+        public async Task<List<Institution>> LoadRecovaInstitutionsAsync()
+        {
+            List<Institution> institutions = await Fingrid.Monitoring.Utility.InstitutionInfo.GetRecovaInstitutions();
+            Logger.Log("RECOVA INSTITUTIONS");
+            Logger.Log(institutions.Count.ToString());
+            foreach (var i in institutions.OrderBy(i => i.Code))
+            {
+                Logger.Log(i.Id + " : " + i.Name);
             }
 
             System.Threading.Thread.Sleep(1000);
