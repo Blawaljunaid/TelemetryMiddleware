@@ -73,7 +73,7 @@ namespace Fingrid.Monitoring
 
 
             technicalSuccessItems = new Dictionary<string, string>();
-            string concatenatedTechnicalSuccess = ConfigurationManager.AppSettings["TechnicalSuccessCodes"];
+            string concatenatedTechnicalSuccess = ConfigurationManager.AppSettings["ThirdpartyTechnicalSuccessCodes"];
             foreach (string s in concatenatedTechnicalSuccess.Split(','))
             {
                 technicalSuccessItems.Add(s.Trim(), s.Trim());
