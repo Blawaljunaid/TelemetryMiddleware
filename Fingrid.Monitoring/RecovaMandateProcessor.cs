@@ -15,7 +15,7 @@ namespace Fingrid.Monitoring
         Dictionary<string, Institution> institutionsDict = null;
 
         public RecovaMandateProcessor(Loader loader, List<Institution> institutions)
-           : base(loader, "RecovaProcessor", "mandates_recova_mandate-staging")
+           : base(loader, "RecovaProcessor", "mandates_recova_mandate-production")
         {
             this.objDict = new ConcurrentDictionary<string, RecovaMandateProcessorObj>();
 
