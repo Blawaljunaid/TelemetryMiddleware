@@ -120,9 +120,9 @@ namespace Fingrid.Monitoring
                 Tags = new Dictionary<string, object>()
                 {
                     {"IsSuccessful", currentObj.IsSuccessful },
-                    {"InstitutionName", InstitutionInfo.GetInstitutionName(currentObj.InstitutionCode,this.institutionsDict) },
+                    {"InstitutionName", InstitutionInfo.GetInstitutionName(initialObj.InstitutionCode,this.institutionsDict) },
                     {"APICode", currentObj.APICode },
-                    {"IsResponse", currentObj.IsResponse },
+                    //{"IsResponse", currentObj.IsResponse },
                     {"ResponseDescription", currentObj.ResponseDescription },
 
                 },
@@ -133,6 +133,7 @@ namespace Fingrid.Monitoring
                     {"InstitutionCode", currentObj.InstitutionCode },
                     { "SuccessCount", currentObj.IsSuccessful == "Successful" ? 1 : 0},
                     { "FailedCount", currentObj.IsSuccessful == "Failed" ? 1 : 0},
+                    {"IsResponse", currentObj.IsResponse },
                     {"UniqueId", currentObj.UniqueId },
                     {"TotalCnt", 1},
                 },
