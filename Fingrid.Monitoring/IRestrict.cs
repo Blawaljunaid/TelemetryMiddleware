@@ -15,7 +15,7 @@ namespace Fingrid.Monitoring
         Dictionary<string, Institution> institutionsDict = null;
 
         public IRestrictProcessor(Loader loader, List<Institution> institutions)
-           : base(loader, "IRestrictProcessor", "__Monitoring.Irestrict.Staging")
+           : base(loader, "IRestrictProcessor", "__Monitoring.Irestrict.Production")
         {
             this.objDict = new ConcurrentDictionary<string, IRestrictProcessorObj>();
 
