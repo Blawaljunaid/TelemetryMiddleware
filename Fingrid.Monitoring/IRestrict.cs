@@ -113,6 +113,9 @@ namespace Fingrid.Monitoring
 
         private Point GeneratePoint(IRestrictProcessorObj currentObj, IRestrictProcessorObj initialObj)
         {
+            Logger.Log($"{initialObj.InstitutionCode} ************************ ini");
+            Logger.Log($"{currentObj.InstitutionCode} ************************ cur");
+            Logger.Log($"{InstitutionInfo.GetInstitutionName(currentObj.InstitutionCode, this.institutionsDict)} ######");
             var pointToWrite = new Point()
             {
                 Precision = InfluxDB.Net.Enums.TimeUnit.Milliseconds,
@@ -120,7 +123,7 @@ namespace Fingrid.Monitoring
                 Tags = new Dictionary<string, object>()
                 {
                     {"IsSuccessful", currentObj.IsSuccessful },
-                    {"InstitutionName", InstitutionInfo.GetInstitutionName(initialObj.InstitutionCode,this.institutionsDict) },
+                    {"InstitutionName", InstitutionInfo.GetInstitutionName(currentObj.InstitutionCode,this.institutionsDict) },
                     {"APICode", currentObj.APICode },
                     //{"IsResponse", currentObj.IsResponse },
                     {"ResponseDescription", currentObj.ResponseDescription },
