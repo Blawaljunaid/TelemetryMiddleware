@@ -1,0 +1,72 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- azure-pipelines
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: echo "Code Backup from Bitbucket to Github"
+  displayName: 'Run a one-line script'
+
+- script: |
+    #!/bin/bash
+
+    #Define your Bitbucket and GitHub repository URLs
+    BITBUCKET_TOKEN="ATBBCnCvY8YgtpZNXm8GTEh8Nzn9F7D33FE3"
+    GITHUB_TOKEN="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"
+    REPO_GIT="fingridmon.service.git"
+    BITBUCKET_REPO_URL="https://infosysadmin:$BITBUCKET_TOKEN@bitbucket.org/appzonegroup/$REPO_GIT"
+    GITHUB_REPO_URL="https://$GITHUB_TOKEN@github.com/AppZoneinfosysadmin/$REPO_GIT"
+
+    # Set your Bitbucket and GitHub personal access tokens
+    BITBUCKET_ACCESS_TOKEN="$BITBUCKET_TOKEN"
+    GITHUB_ACCESS_TOKEN="$GITHUB_TOKEN"
+
+    # Clone the Bitbucket repository locally
+    git clone "$BITBUCKET_REPO_URL"
+
+    # Navigate to the cloned repository directory
+    cd fingrid.monitoringservice
+
+    # Configure Git with your GitHub credentials
+    git config --global user.email "infosysadmin@qore.inc"
+    git config --global user.name "Info Sys Admin"
+    git config --global credential.helper "store --file ~/.git-credentials"
+
+    # Log in to GitHub using your access token
+    echo "https://github.com" > ~/.git-credentials
+    echo "username:$GITHUB_ACCESS_TOKEN@github.com" >> ~/.git-credentials
+
+    # Check if the GitHub repository already exists
+    existing_repo=$(curl -s -H "Authorization: token $GITHUB_ACCESS_TOKEN" "https://api.github.com/repos/AppZoneinfosysadmin/$REPO_GIT")
+
+    if [[ "$existing_repo" == *"Not Found"* ]]; then
+      # Create a new private repository on GitHub
+      curl -X POST -H "Authorization: token $GITHUB_ACCESS_TOKEN" \
+          -d '{"name": "fingridmon.service", "private": true}' \
+          https://api.github.com/user/repos
+    fi
+
+    # Add the GitHub repository as a remote
+    git remote add github "$GITHUB_REPO_URL"
+
+    # Fetch the latest changes from the Bitbucket repository
+    git fetch origin
+
+    # Merge the changes into the current branch (e.g., 'main')
+    git merge origin/master --allow-unrelated-histories
+
+    # Push the merged code to GitHub
+    git push github master
+
+    # Clean up: Remove the cloned Bitbucket repository
+    cd ..
+    rm -rf fingridmon.service
+
+    echo "Done! Your Bitbucket repository has been copied to GitHub with the latest changes."
+  displayName: 'Run a multi-line script'
