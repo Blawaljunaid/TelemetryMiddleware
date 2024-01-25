@@ -4,7 +4,7 @@
 # https://aka.ms/yaml
 
 trigger:
-- azure-pipelines
+- DRGithub
 
 pool:
   vmImage: ubuntu-latest
@@ -31,7 +31,7 @@ steps:
     git clone "$BITBUCKET_REPO_URL"
 
     # Navigate to the cloned repository directory
-    cd fingrid.monitoringservice
+    cd fingridmon.service
 
     # Configure Git with your GitHub credentials
     git config --global user.email "infosysadmin@qore.inc"
